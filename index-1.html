@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semillero RISE - I.E.D. Técnica Bilingüe Jorge Nicolás Abello</title>
+    <meta name="description" content="Semillero RISE (Research in Sustainability Evolution): investigación juvenil para la conservación del Bosque de Manglar y el Bosque Seco Tropical en la Ciénaga de Mallorquín, Barranquilla.">
+    <link rel="icon" type="image/jpeg" href="1000297009.jpg">
+    <meta name="theme-color" content="#0f3818">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #0f3818;
+            --primary-green: #1b5e20;
+            --secondary-green: #2e7d32;
+            --accent-color: #26a69a;
+            --accent-gold: #fbc02d;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #555555;
+            --link-color: #00796b;
+            --link-hover: #004d40;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Enlace de salto para navegación por teclado / lectores de pantalla */
+        .skip-link {
+            position: absolute;
+            left: 10px;
+            top: -60px;
+            background: var(--primary-dark);
+            color: #fff;
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            z-index: 3000;
+            text-decoration: none;
+            font-weight: 600;
+            transition: top 0.2s ease;
+        }
+
+        .skip-link:focus {
+            top: 10px;
+        }
+
+        /* Estados de foco visibles para navegación con teclado */
+        a:focus-visible,
+        button:focus-visible,
+        canvas:focus-visible,
+        .card:focus-within {
+            outline: 3px solid var(--accent-gold);
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
+            }
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+            .bubble-layer {
+                display: none;
+            }
+        }
+
+        /* Barra de Navegación */
+        nav {
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.9rem 5%;
+        }
+
+        nav .logo-nav {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        nav .logo-nav span {
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.15rem;
+            align-items: center;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.82rem;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--secondary-green);
+        }
+
+        /* Botón de menú móvil (hamburguesa) */
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+        }
+
+        .nav-toggle:hover {
+            background: rgba(46, 125, 50, 0.08);
+        }
+
+        /* Hero Section optimizada con respaldo de imagen */
+        header.hero {
+            min-height: 95vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(rgba(10, 40, 20, 0.82), rgba(15, 56, 24, 0.88)), url('1000297002.jpg') center 30%/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #ffffff;
+            padding: 2rem 20px;
+            margin-top: 65px;
+        }
+
+        /* Capa de burbujas ambientales — eco del agua de la ciénaga */
+        .bubble-layer {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -10%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(178, 223, 219, 0.55), rgba(178, 223, 219, 0.05));
+            border: 1px solid rgba(178, 223, 219, 0.35);
+            animation: rise linear infinite;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(-105vh) translateX(var(--drift, 20px)); opacity: 0; }
+        }
+
+        header.hero > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Divisor de ola entre el hero y el contenido */
+        .wave-divider {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            line-height: 0;
+            z-index: 2;
+        }
+
+        .wave-divider svg {
+            width: 100%;
+            height: 70px;
+            display: block;
+        }
+
+        header.hero img.logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-gold);
+            margin-bottom: 1.2rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            animation: fadeInDown 1s ease;
+            background-color: #fff;
+        }
+
+        header.hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 0.01em;
+            margin-bottom: 0.4rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+            animation: fadeInDown 1s ease 0.2s both;
+        }
+
+        header.hero h3 {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #b2dfdb;
+            margin-bottom: 1rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease 0.3s both;
+        }
+
+        header.hero p {
+            font-size: 1.05rem;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            color: #e0f2f1;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .btn {
+            padding: 12px 32px;
+            background-color: var(--accent-gold);
+            color: #111;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 30px;
+            transition: background-color 0.3s, transform 0.3s;
+            animation: fadeInUp 1s ease 0.6s both;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            background-color: #fbc02d;
+            transform: translateY(-3px);
+        }
+
+        /* Barra de progreso de lectura */
+        #scrollProgress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-color));
+            z-index: 2000;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Chips del acrónimo RISE */
+        .rise-acronym {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.9rem;
+            margin: 1.6rem 0 0.4rem;
+        }
+
+        .rise-acronym .chip {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(178, 223, 219, 0.4);
+            border-radius: 10px;
+            padding: 0.6rem 1rem;
+            min-width: 108px;
+            backdrop-filter: blur(4px);
+        }
+
+        .rise-acronym .chip .letter {
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-size: 1.6rem;
+            color: var(--accent-gold);
+            display: block;
+            line-height: 1;
+        }
+
+        .rise-acronym .chip .word {
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+            color: #e0f2f1;
+        }
+
+        /* Contenedor Principal */
+        .container {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--secondary-green);
+        }
+
+        section h2 {
+            text-align: center;
+            font-size: 2.1rem;
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .eyebrow {
+            display: block;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.6rem;
+        }
+
+        section h2::after {
+            content: '';
+            width: 70px;
+            height: 4px;
+            background-color: var(--accent-color);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        section > p {
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: -1.5rem;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        /* Galerías */
+        .grid-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 20px rgba(46, 125, 50, 0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+            display: block;
+            background-color: #e8f5e9;
+        }
+
+        .card .caption {
+            padding: 1.2rem;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        /* Contenedor de Video 16:9 */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Sección Proyecto: problema + objetivos */
+        .proyecto-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .problema-foto {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .problema-foto img {
+            width: 100%;
+            display: block;
+            height: 100%;
+            object-fit: cover;
+            min-height: 260px;
+        }
+
+        .pregunta-caja {
+            margin-top: 1.2rem;
+            background: #e8f5e9;
+            border-left: 4px solid var(--secondary-green);
+            border-radius: 8px;
+            padding: 1.1rem 1.3rem;
+            font-style: italic;
+            color: var(--primary-dark);
+        }
+
+        .objetivos-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .objetivos-list li {
+            display: flex;
+            gap: 0.9rem;
+            align-items: flex-start;
+            background: var(--bg-color);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .objetivos-list .num {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--secondary-green);
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .objetivo-general-item {
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        /* Sección Impacto: contadores animados */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1.5rem 1rem;
+            border-radius: 10px;
+            background: linear-gradient(160deg, #f4f6f8, #e8f5e9);
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-item .stat-number {
+            font-family: 'Fraunces', serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--secondary-green);
+            line-height: 1;
+        }
+
+        .stat-item .stat-label {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Sección Cronograma: línea de tiempo */
+        .timeline {
+            position: relative;
+            max-width: 780px;
+            margin: 0 auto;
+            padding-left: 2.4rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent-color), var(--secondary-green));
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.9rem;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: attr(data-fase);
+            position: absolute;
+            left: -2.4rem;
+            top: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--primary-dark);
+            color: var(--accent-gold);
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-item h4 {
+            color: var(--primary-dark);
+            font-size: 1.05rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .timeline-item .fecha {
+            font-size: 0.82rem;
+            color: var(--link-color);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-item p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        /* Lightbox de imágenes */
+        .card img { cursor: zoom-in; }
+
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 20, 12, 0.92);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 4vh 4vw;
+        }
+
+        #lightbox.open { display: flex; }
+
+        #lightbox img {
+            max-width: 100%;
+            max-height: 82vh;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        #lightbox .lb-caption {
+            color: #e0f2f1;
+            text-align: center;
+            margin-top: 1rem;
+            max-width: 700px;
+            font-size: 0.95rem;
+        }
+
+        #lightbox .lb-close {
+            position: absolute;
+            top: 22px;
+            right: 30px;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        @media (max-width: 768px) {
+            .proyecto-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mini-Juego */
+        .game-wrapper {
+            text-align: center;
+        }
+        
+        #gameCanvas {
+            background-color: #e0f7fa; 
+            border: 4px solid var(--primary-dark);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.08);
+            touch-action: none;
+            cursor: crosshair;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .game-controls {
+            margin-top: 1.2rem;
+        }
+
+        button.btn-jugar {
+            background-color: var(--accent-gold);
+            color: #111;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            padding: 0.8rem 2.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        button.btn-jugar:hover {
+            background-color: #fbc02d;
+            transform: translateY(-2px);
+        }
+
+        #gameScore {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-dark);
+            color: #ffffff;
+            padding: 3.5rem 5%;
+            text-align: center;
+        }
+
+        footer h3 {
+            color: #a7ffeb;
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        footer p {
+            color: #cfd8dc;
+            font-size: 0.95rem;
+        }
+
+        .social-links {
+            margin: 1.5rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .social-links a {
+            color: #ffffff;
+            font-size: 1.8rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-gold);
+            transform: scale(1.1);
+        }
+
+        /* Animaciones */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============ Responsive: Tablet y Móvil ============ */
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            nav ul {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                background: var(--card-bg);
+                max-height: 0;
+                overflow: hidden;
+                box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+                transition: max-height 0.35s ease;
+            }
+
+            nav ul.open {
+                max-height: 480px;
+            }
+
+            nav ul li {
+                border-top: 1px solid #eee;
+            }
+
+            nav ul li a {
+                display: block;
+                padding: 0.95rem 6%;
+                font-size: 0.95rem;
+            }
+
+            header.hero {
+                min-height: 100vh;
+                padding-top: 1rem;
+            }
+
+            header.hero h1 {
+                font-size: clamp(2rem, 9vw, 2.6rem);
+            }
+
+            header.hero h3 {
+                font-size: 1rem;
+            }
+
+            header.hero p {
+                font-size: 0.95rem;
+            }
+
+            .rise-acronym .chip {
+                min-width: 82px;
+                padding: 0.5rem 0.7rem;
+            }
+
+            section {
+                padding: 1.6rem 1.2rem;
+            }
+
+            section h2 {
+                font-size: 1.6rem;
+            }
+
+            .container {
+                margin: 2rem auto;
+                padding: 0 1rem;
+            }
+
+            .grid-gallery,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 2rem;
+            }
+
+            .timeline-item::before {
+                left: -2rem;
+            }
+
+            #lightbox .lb-close {
+                top: 12px;
+                right: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .rise-acronym .chip {
+                min-width: 68px;
+                padding: 0.45rem 0.5rem;
+            }
+            .rise-acronym .chip .letter {
+                font-size: 1.3rem;
+            }
+            nav .logo-nav {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="#inicio" class="skip-link">Saltar al contenido principal</a>
+
+    <div id="scrollProgress"></div>
+
+    <!-- Navegación Fija -->
+    <nav>
+        <a href="#inicio" class="logo-nav"><i class="fas fa-seedling" aria-hidden="true" style="color: var(--secondary-green);"></i> Semillero <span>RISE</span></a>
+        <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="navMenu">
+            <i class="fas fa-bars" aria-hidden="true" id="navToggleIcon"></i>
+        </button>
+        <ul id="navMenu">
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#proyecto">Proyecto</a></li>
+            <li><a href="#stem-prototipos">Innovación STEM</a></li>
+            <li><a href="#campo-conservacion">Conservación</a></li>
+            <li><a href="#cronograma">Cronograma</a></li>
+            <li><a href="#eventos">Eventos</a></li>
+            <li><a href="#minijuego">Mini-Juego</a></li>
+        </ul>
+    </nav>
+
+    <!-- Encabezado Hero -->
+    <header id="inicio" class="hero">
+        <div class="bubble-layer" id="bubbleLayer"></div>
+
+        <img src="1000297009.jpg" alt="Logo Semillero RISE" class="logo" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534567153574-2b12153a87f0?auto=format&fit=crop&w=400&q=80';">
+        <h1>Semillero RISE</h1>
+        <h3>Research in Sustainability Evolution</h3>
+        <p><strong>I.E.D. Técnica Bilingüe Jorge Nicolás Abello</strong> — Barranquilla, Atlántico. Liderado por Julieth Mercado, impulsamos la educación ambiental, el prototipado tecnológico y la evolución hacia la sostenibilidad en la Ciénaga de Mallorquín.</p>
+
+        <div class="rise-acronym">
+            <div class="chip"><span class="letter">R</span><span class="word">Research</span></div>
+            <div class="chip"><span class="letter">I</span><span class="word">in</span></div>
+            <div class="chip"><span class="letter">S</span><span class="word">Sustainability</span></div>
+            <div class="chip"><span class="letter">E</span><span class="word">Evolution</span></div>
+        </div>
+
+        <a href="#proyecto" class="btn" style="margin-top: 1.6rem;">Explorar Proyecto</a>
+
+        <div class="wave-divider">
+            <svg viewBox="0 0 1200 70" preserveAspectRatio="none">
+                <path d="M0,40 C150,80 350,0 600,30 C850,60 1050,10 1200,35 L1200,70 L0,70 Z" fill="#f4f6f8"></path>
+            </svg>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Sección Proyecto: Problema y Objetivos -->
+        <section id="proyecto" class="reveal">
+            <span class="eyebrow">Propuesta de Investigación Formativa</span>
+            <h2>El Problema que Investigamos</h2>
+            <div class="proyecto-grid">
+                <div>
+                    <div class="problema-foto">
+                        <img src="1000297002.jpg" alt="Embarcación tradicional en la Ciénaga de Mallorquín" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=800&q=80';">
+                    </div>
+                    <p style="margin-top: 1rem;">La Ciénaga de Mallorquín y sus ecosistemas asociados —el <strong>Bosque de Manglar</strong> y el <strong>Bosque Seco Tropical</strong>— son fundamentales para la biodiversidad de Barranquilla. Sin embargo, el crecimiento urbano descontrolado, la contaminación y la explotación de recursos han llevado a su degradación, afectando la flora, la fauna y la calidad del agua.</p>
+                    <div class="pregunta-caja">
+                        "¿Cómo mitigar el impacto del cambio climático y generar conciencia ambiental en la comunidad barranquillera ubicada en la Ciénaga de Mallorquín, incluyendo la protección del Bosque de Manglar y el Bosque Seco Tropical?"
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-size: 1.15rem;">Objetivo General</h3>
+                    <ul class="objetivos-list" style="margin-bottom: 1.6rem;">
+                        <li class="objetivo-general-item">
+                            <span class="num"><i class="fas fa-bullseye"></i></span>
+                            <span>Promover la conservación y protección de la biodiversidad asociada al Bosque de Manglar y al Bosque Seco Tropical a través de una página web y una aplicación móvil en la Ciénaga de Mallorquín.</span>
+                        </li>
+                    </ul>
+                    <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-size: 1.15rem;">Objetivos Específicos</h3>
+                    <ul class="objetivos-list">
+                        <li><span class="num">1</span><span>Caracterizar la biodiversidad del Bosque de Manglar y del Bosque Seco Tropical, identificando especies clave y sus interacciones ecológicas.</span></li>
+                        <li><span class="num">2</span><span>Desarrollar e implementar talleres sobre cambio climático y sostenibilidad ambiental para fomentar prácticas sostenibles por medio de la tecnología.</span></li>
+                        <li><span class="num">3</span><span>Crear contenido educativo interactivo en una página web y una aplicación móvil para sensibilizar a la comunidad sobre la conservación de estos ecosistemas.</span></li>
+                        <li><span class="num">4</span><span>Documentar mediante recursos audiovisuales el cambio dado en la ciénaga a través de nuestras prácticas de conservación sostenibles.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección del Video Promocional -->
+        <section id="video-destacado" class="reveal">
+            <h2>Video del Proyecto</h2>
+            <p>Conoce más acerca del impacto de nuestra iniciativa investigativa y tecnológica:</p>
+            <div class="video-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/Cp-SdGYgh2E" 
+                    title="Video del Proyecto Semillero RISE" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
+        <!-- Sección 1: Prototipado e Innovación STEM -->
+        <section id="stem-prototipos" class="reveal">
+            <h2>Innovación y Desarrollo STEM</h2>
+            <p>Diseño, prototipado y construcción de herramientas tecnológicas aplicadas al monitoreo ambiental:</p>
+            <div class="grid-gallery">
+                <div class="card">
+                    <img src="1000297017.jpg" alt="Ensamblaje del prototipo acuático" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80';">
+                    <div class="caption">
+                        <strong>Taller de Prototipado:</strong> Estudiantes trabajando en el ensamble y cableado de los sistemas del dispositivo acuático (ROV).
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="1000297012.jpg" alt="Prototipo ROV acuático" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=600&q=80';">
+                    <div class="caption">
+                        <strong>Dispositivo Acuático (ROV):</strong> Estructura terminada con sistemas de propulsión y flotadores para exploración y monitoreo hídrico.
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="1000297011.jpg" alt="Maqueta de monitoreo de caudal y entorno" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80';">
+                    <div class="caption">
+                        <strong>Modelo de Monitoreo Fluvial:</strong> Maqueta interactiva con sensores para simulación de control y variables ambientales.
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="1000297016.jpg" alt="Equipo Territorio STEM+IS" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80';">
+                    <div class="caption">
+                        <strong>Equipo Territorio STEM+IS:</strong> Estudiantes y docentes vinculados a la iniciativa educativa e innovadora del colegio.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Investigación de Campo y Concientización -->
+        <section id="campo-conservacion" class="reveal">
+            <h2>Investigación de Campo y Conservación</h2>
+            <p>Exploración directa de ecosistemas locales y desarrollo de una sólida conciencia ecológica:</p>
+            <div class="grid-gallery">
+                <div class="card">
+                    <img src="1000297005.jpg" alt="Expedición ecológica en bosque" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80';">
+                    <div class="caption">
+                        <strong>Salida de Campo Ecológica:</strong> Reconocimiento de flora y fauna en ecosistemas de bosque seco y zonas de manglar.
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="1000297001.jpg" alt="Trabajo de campo en zona hídrica" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80';">
+                    <div class="caption">
+                        <strong>Estudio de Entorno Hídrico:</strong> Recorrido en terreno para la toma de muestras y datos clave sobre el entorno local.
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="1000296995.jpg" alt="Campaña Titíes No Son Mascotas" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80';">
+                    <div class="caption">
+                        <strong>Educación Ambiental:</strong> Taller y campaña de concientización comunitaria sobre la protección de la fauna silvestre.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Impacto: Cifras del Proyecto -->
+        <section id="impacto" class="reveal">
+            <span class="eyebrow">Metodología Mixta</span>
+            <h2>Nuestro Impacto en Cifras</h2>
+            <p>Un enfoque cuantitativo y cualitativo aplicado directamente en la comunidad de la Ciénaga de Mallorquín:</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="402">0</div>
+                    <div class="stat-label">Personas de la comunidad encuestadas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="134">0</div>
+                    <div class="stat-label">Estudiantes vinculados al semillero</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="2">0</div>
+                    <div class="stat-label">Ecosistemas estudiados: manglar y bosque seco</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="500" data-suffix="K">0</div>
+                    <div class="stat-label">COP en recursos gestionados (cámara y dron)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="1" data-suffix="er">0</div>
+                    <div class="stat-label">Aval internacional — MILSET Paraguay 2025, vía RedCOLSI</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Cronograma -->
+        <section id="cronograma" class="reveal">
+            <span class="eyebrow">Fases del Proyecto · 2025</span>
+            <h2>Cronograma de Actividades</h2>
+            <div class="timeline">
+                <div class="timeline-item" data-fase="1">
+                    <div class="fecha">Abril 2025</div>
+                    <h4>Revisión bibliográfica y planificación</h4>
+                    <p>Construcción del marco teórico y diseño de instrumentos de investigación.</p>
+                </div>
+                <div class="timeline-item" data-fase="2">
+                    <div class="fecha">Mayo – Junio 2025</div>
+                    <h4>Muestreos ecológicos y análisis de biodiversidad</h4>
+                    <p>Salidas de campo al Bosque de Manglar y al Bosque Seco Tropical para identificar especies clave.</p>
+                </div>
+                <div class="timeline-item" data-fase="3">
+                    <div class="fecha">Julio – Agosto 2025</div>
+                    <h4>Diseño de talleres educativos</h4>
+                    <p>Elaboración de material de sensibilización y talleres sobre cambio climático para la comunidad.</p>
+                </div>
+                <div class="timeline-item" data-fase="4">
+                    <div class="fecha">Septiembre – Octubre 2025</div>
+                    <h4>Implementación de la página web y la app móvil</h4>
+                    <p>Desarrollo de las plataformas digitales educativas que hoy estás explorando.</p>
+                </div>
+                <div class="timeline-item" data-fase="5">
+                    <div class="fecha">Noviembre 2025</div>
+                    <h4>Evaluación de impacto y socialización de resultados</h4>
+                    <p>Medición del alcance del proyecto y presentación de resultados ante la comunidad académica.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: Participación en Encuentros de Investigación -->
+        <section id="eventos" class="reveal">
+            <h2>Eventos y Encuentros de Investigación</h2>
+            <p>Divulgación y socialización de resultados en plataformas académicas y científicas regionales y nacionales:</p>
+            <div class="grid-gallery">
+                <div class="card">
+                    <img src="1000297021.jpg" alt="Encuentro Departamental EDESI" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=600&q=80';">
+                    <div class="caption">
+                        <strong>XXII EDESI:</strong> Delegación del semillero participando activamente en el Encuentro Departamental de Semilleros.
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="1000296994.jpg" alt="Encuentro de Semilleros RedCOLSI" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=80';">
+                    <div class="caption">
+                        <strong>Encuentro RedCOLSI:</strong> Socialización y networking científico junto a investigadores de todo el país.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 4: Mini-Juego -->
+        <section id="minijuego" class="reveal">
+            <h2>Mini-Juego: Protege el Humedal</h2>
+            <p>Mueve la canasta ecológica para recoger la basura antes de que contamine el agua del ecosistema.</p>
+            <div class="game-wrapper">
+                <canvas id="gameCanvas" width="600" height="400" tabindex="0" role="img" aria-label="Área del mini-juego Protege el Humedal. Usa las flechas izquierda y derecha, o arrastra el dedo, para mover la canasta."></canvas>
+                <div class="game-controls">
+                    <button class="btn-jugar" id="startBtn">Iniciar Juego</button>
+                    <div id="gameScore" aria-live="polite" aria-atomic="true">Basura recolectada: 0 | Contaminación: 0/5</div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <h3>Semillero RISE (Research in Sustainability Evolution)</h3>
+        <p style="margin-top: 5px;">I.E.D. Técnica Bilingüe Jorge Nicolás Abello — Barranquilla, Atlántico</p>
+        <p style="margin-top: 5px;">Líder del semillero: Julieth Mercado</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/jorge_nabello?igsh=Z3ZtN2N2ZGJ0czRw" target="_blank" title="Instagram Institucional" aria-label="Instagram del colegio (se abre en una pestaña nueva)"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+            <a href="mailto:jorgenicolasabellobilingue@gmail.com" title="Correo Electrónico" aria-label="Enviar correo electrónico"><i class="fas fa-envelope" aria-hidden="true"></i></a>
+        </div>
+        <p>&copy; 2026 Semillero RISE. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Lightbox de imágenes -->
+    <div id="lightbox" role="dialog" aria-modal="true" aria-label="Imagen ampliada">
+        <span class="lb-close" id="lbClose" role="button" tabindex="0" aria-label="Cerrar imagen ampliada">&times;</span>
+        <div style="display:flex; flex-direction:column; align-items:center;">
+            <img id="lbImg" src="" alt="">
+            <div class="lb-caption" id="lbCaption"></div>
+        </div>
+    </div>
+
+    <!-- Lógica de Interacciones, Ambientación y Mini-Juego -->
+    <script>
+        /* ============ Barra de progreso de scroll ============ */
+        const scrollProgress = document.getElementById('scrollProgress');
+        const updateProgress = () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            scrollProgress.style.width = pct + '%';
+        };
+        window.addEventListener('scroll', updateProgress);
+        updateProgress();
+
+        /* ============ Menú móvil (hamburguesa) ============ */
+        const navToggle = document.getElementById('navToggle');
+        const navToggleIcon = document.getElementById('navToggleIcon');
+        const navMenu = document.getElementById('navMenu');
+
+        const closeNavMenu = () => {
+            navMenu.classList.remove('open');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggleIcon.classList.remove('fa-xmark');
+            navToggleIcon.classList.add('fa-bars');
+        };
+
+        navToggle.addEventListener('click', () => {
+            const isOpen = navMenu.classList.toggle('open');
+            navToggle.setAttribute('aria-expanded', String(isOpen));
+            navToggleIcon.classList.toggle('fa-bars', !isOpen);
+            navToggleIcon.classList.toggle('fa-xmark', isOpen);
+        });
+
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeNavMenu);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeNavMenu();
+        });
+
+        /* ============ Animación de aparición al hacer scroll ============ */
+        const reveals = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            reveals.forEach(reveal => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        /* ============ Burbujas ambientales en el Hero ============ */
+        const bubbleLayer = document.getElementById('bubbleLayer');
+        const totalBubbles = 22;
+        for (let i = 0; i < totalBubbles; i++) {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            const size = 6 + Math.random() * 22;
+            b.style.width = size + 'px';
+            b.style.height = size + 'px';
+            b.style.left = Math.random() * 100 + '%';
+            b.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+            const duration = 9 + Math.random() * 12;
+            b.style.animationDuration = duration + 's';
+            b.style.animationDelay = (Math.random() * duration) + 's';
+            bubbleLayer.appendChild(b);
+        }
+
+        /* ============ Contadores animados (sección Impacto) ============ */
+        const statNumbers = document.querySelectorAll('.stat-number');
+        const animateCount = (el) => {
+            const target = parseInt(el.getAttribute('data-target'), 10);
+            const suffix = el.getAttribute('data-suffix') || '';
+            const duration = 1400;
+            const start = performance.now();
+            const step = (now) => {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.round(eased * target) + suffix;
+                if (progress < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        };
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCount(entry.target);
+                    statObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        statNumbers.forEach(el => statObserver.observe(el));
+
+        /* ============ Lightbox de imágenes de la galería ============ */
+        const lightbox = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lbImg');
+        const lbCaption = document.getElementById('lbCaption');
+        const lbClose = document.getElementById('lbClose');
+
+        document.querySelectorAll('.card').forEach(card => {
+            const img = card.querySelector('img');
+            const caption = card.querySelector('.caption');
+            if (!img) return;
+            img.setAttribute('tabindex', '0');
+            img.setAttribute('role', 'button');
+            img.setAttribute('aria-label', 'Ampliar imagen: ' + (img.alt || 'foto del proyecto'));
+            const openLightbox = () => {
+                lbImg.src = img.src;
+                lbImg.alt = img.alt;
+                lbCaption.textContent = caption ? caption.textContent.trim() : img.alt;
+                lightbox.classList.add('open');
+                lbClose.focus();
+            };
+            img.addEventListener('click', openLightbox);
+            img.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openLightbox();
+                }
+            });
+        });
+
+        const closeLightbox = () => lightbox.classList.remove('open');
+        lbClose.addEventListener('click', closeLightbox);
+        lbClose.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                closeLightbox();
+            }
+        });
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        /* ============ Mini-Juego: Protege el Humedal ============ */
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const scoreDisplay = document.getElementById('gameScore');
+
+        let gameLoop;
+        let isPlaying = false;
+        let score = 0;
+        let missed = 0;
+        const maxMissed = 5;
+        const winScore = 20;
+
+        const catcher = {
+            width: 70,
+            height: 40,
+            x: canvas.width / 2 - 35,
+            y: canvas.height - 55,
+            speed: 8
+        };
+
+        let trashItems = [];
+        const trashEmojis = ['🧴', '🛍️', '🥤', '🥫'];
+        let spawnTimer = 0;
+        let spawnInterval = 65;
+        let frameCount = 0;
+        let fallSpeed = 2.2;
+
+        function updateScoreboard() {
+            scoreDisplay.textContent = `Basura recolectada: ${score} | Contaminación: ${missed}/${maxMissed}`;
+        }
+
+        function resetGame() {
+            score = 0;
+            missed = 0;
+            trashItems = [];
+            frameCount = 0;
+            spawnTimer = 0;
+            spawnInterval = 65;
+            fallSpeed = 2.2;
+            catcher.x = canvas.width / 2 - catcher.width / 2;
+            updateScoreboard();
+        }
+
+        function spawnTrash() {
+            const x = Math.random() * (canvas.width - 40) + 20;
+            const emoji = trashEmojis[Math.floor(Math.random() * trashEmojis.length)];
+            trashItems.push({ x, y: -20, speed: fallSpeed + Math.random() * 1.4, emoji });
+        }
+
+        function drawBackground() {
+            ctx.fillStyle = '#e0f7fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(38, 166, 154, 0.18)';
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height - 26);
+            for (let i = 0; i <= canvas.width; i += 20) {
+                ctx.lineTo(i, canvas.height - 26 + Math.sin((i + frameCount * 2.2) / 28) * 6);
+            }
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawCatcher() {
+            ctx.font = '38px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('🧺', catcher.x, catcher.y + 34);
+        }
+
+        function drawTrash() {
+            ctx.font = '26px sans-serif';
+            ctx.textAlign = 'left';
+            trashItems.forEach(t => ctx.fillText(t.emoji, t.x, t.y));
+        }
+
+        function drawHUD() {
+            ctx.fillStyle = 'rgba(15, 56, 24, 0.75)';
+            ctx.fillRect(10, 10, 170, 28);
+            ctx.fillStyle = '#fff';
+            ctx.font = '13px Poppins, sans-serif';
+            ctx.fillText(`♻ ${score}   ⚠ ${missed}/${maxMissed}`, 20, 29);
+        }
+
+        function endGame(won) {
+            isPlaying = false;
+            cancelAnimationFrame(gameLoop);
+            ctx.fillStyle = 'rgba(15, 56, 24, 0.88)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 24px Poppins, sans-serif';
+            ctx.fillText(won ? '¡Ciénaga protegida! 🎉' : 'La contaminación ganó 😢', canvas.width / 2, canvas.height / 2 - 10);
+            ctx.font = '15px Poppins, sans-serif';
+            ctx.fillStyle = '#e0f2f1';
+            ctx.fillText('Presiona el botón para volver a intentarlo', canvas.width / 2, canvas.height / 2 + 24);
+            ctx.textAlign = 'left';
+            startBtn.textContent = 'Jugar de nuevo';
+        }
+
+        function update() {
+            frameCount++;
+            spawnTimer++;
+            if (spawnTimer > spawnInterval) {
+                spawnTrash();
+                spawnTimer = 0;
+                if (spawnInterval > 28) spawnInterval -= 0.6;
+            }
+
+            trashItems.forEach(t => t.y += t.speed);
+
+            trashItems = trashItems.filter(t => {
+                const caught = t.y > catcher.y - 6 && t.y < catcher.y + catcher.height &&
+                    t.x > catcher.x - 8 && t.x < catcher.x + catcher.width + 8;
+                if (caught) {
+                    score++;
+                    updateScoreboard();
+                    return false;
+                }
+                if (t.y > canvas.height) {
+                    missed++;
+                    updateScoreboard();
+                    return false;
+                }
+                return true;
+            });
+
+            if (missed >= maxMissed) {
+                endGame(false);
+                return false;
+            }
+            if (score >= winScore) {
+                endGame(true);
+                return false;
+            }
+            return true;
+        }
+
+        function draw() {
+            drawBackground();
+            drawTrash();
+            drawCatcher();
+            drawHUD();
+        }
+
+        function loop() {
+            if (!isPlaying) return;
+            const alive = update();
+            draw();
+            if (alive) {
+                gameLoop = requestAnimationFrame(loop);
+            }
+        }
+
+        startBtn.addEventListener('click', () => {
+            resetGame();
+            isPlaying = true;
+            startBtn.textContent = 'Reiniciar';
+            loop();
+        });
+
+        function moveCatcherTo(clientX) {
+            const rect = canvas.getBoundingClientRect();
+            const scale = canvas.width / rect.width;
+            const x = (clientX - rect.left) * scale - catcher.width / 2;
+            catcher.x = Math.max(0, Math.min(canvas.width - catcher.width, x));
+        }
+
+        canvas.addEventListener('mousemove', (e) => moveCatcherTo(e.clientX));
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            moveCatcherTo(e.touches[0].clientX);
+        }, { passive: false });
+
+        document.addEventListener('keydown', (e) => {
+            if (!isPlaying) return;
+            if (e.key === 'ArrowLeft') catcher.x = Math.max(0, catcher.x - catcher.speed * 3);
+            if (e.key === 'ArrowRight') catcher.x = Math.min(canvas.width - catcher.width, catcher.x + catcher.speed * 3);
+        });
+
+        // Dibujo inicial en reposo
+        resetGame();
+        draw();
+    </script>
+</body>
+</html>
